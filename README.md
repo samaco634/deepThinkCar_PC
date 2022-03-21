@@ -1,4 +1,4 @@
-## deepThinkCar 자율주행 3단계: 딥러닝 트레이닝 
+## deepThinkCar 자율주행: 딥러닝 트레이닝 
 
 ### 3단계에서는...
 3단계에서는 2단계에서 라벨링 된 데이터를 CNN을 통해서 딥러닝 트레이닝을 실행합니다. 이 단계는 라즈베리파이에서 실행하지 않고 PC에서 실행하게 됩니다.    
@@ -94,7 +94,7 @@ Mode                 LastWriteTime         Length Name
 d-----      2021-07-20  오후 12:14                data
 d-----      2021-07-20  오후 12:14                output
 d-----      2021-07-20  오후 12:14                __pycache__
--a----      2021-07-20  오후 12:14           5715 jdlablab.yml
+-a----      2021-07-20  오후 12:14           5715 jdlab.yml
 -a----      2021-07-20  오후 12:14           8744 jd_deep_learning.py
 -a----      2021-07-20  오후 12:14            171 README.md
 
@@ -107,7 +107,7 @@ d-----      2021-07-20  오후 12:14                __pycache__
 (base) PS C:\Users\user\Downloads\deepThinkCar-tf-PC> conda env create --file jdlab.yml
 </code></pre>
 
-4분 정도 지나고 다음과 같은 메시지가 프롬프트 윈도에 나타나면 가상환경 설치가 완료된 것입니다. 설치된 가상환경의 이름은 자동으로 "jdlablab_win"으로 만들어 집니다. 
+4분 정도 지나고 다음과 같은 메시지가 프롬프트 윈도에 나타나면 가상환경 설치가 완료된 것입니다. 설치된 가상환경의 이름은 자동으로 "jdlab_v10"으로 만들어 집니다. 
 <pre><code>
 done
 #
@@ -122,7 +122,7 @@ done
 (base) PS C:\Users\user\Downloads\deepThinkCar-tf-PC>
 </code></pre>   
 
-"jdlab_win" 가상환경의 설치가 완료된 후, 다음과 같은 명령을 통해 가상환경을 활성화 합니다. 
+"jdlab_v10" 가상환경의 설치가 완료된 후, 다음과 같은 명령을 통해 가상환경을 활성화 합니다. 
 
 <pre><code>   
 (base) PS C:\Users\user\Downloads\deepThinkCar-tf-PC> conda activate jdlab_v10
@@ -157,7 +157,7 @@ Mode                 LastWriteTime         Length Name
    
    
 <pre><code>  
-(jdlab_win) PS C:\Users\user\Downloads\deepThinkCar-tf-PC> python .\jd_deep_learning.py
+(jdlab_v10) PS C:\Users\user\Downloads\deepThinkCar-tf-PC> python .\jd_deep_learning.py
 tf.__version__: 2.3.0
 keras.__version__: 2.4.3
 Training data: 152
