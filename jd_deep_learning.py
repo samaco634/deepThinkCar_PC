@@ -10,6 +10,9 @@ Description:
 
 Output: ***.h5
 
+'''
+1. Importing necessary python modules 
+'''
 """
 # python standard libraries
 import os
@@ -41,13 +44,8 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from PIL import Image
 
-class CobitDeepLearning: 
-    """
-	1단계: OpenCV를 이용한 차선인식 주행 \n
-	OpenCV를 이용해서 차선의 각도를 인식하고, 차량 스티어링 휠을 회전함 \n
-	차량 구동용 DC모터를 동작시켜서 차량을 전진시킴. 차선은 빨간색으로 고정되어 있음  \n
-	차량이 차선을 정확하게 따라 가면 1단계 성공임 
-	"""
+class JdDeepLearning: 
+
     def __init__(self):
 
         print( f'tf.__version__: {tf.__version__}' )
@@ -67,7 +65,10 @@ class CobitDeepLearning:
 
         self.X_train, self.X_valid, self.y_train, self.y_valid = train_test_split( image_paths, steering_angles, test_size=0.2)
         print("Training data: %d\nValidation data: %d" % (len(self.X_train), len(self.X_valid)))
-
+	
+    '''
+    labeling image data augmentation 
+    '''
     # put it together
     def random_augment(self, image, steering_angle):
         if np.random.rand() < 0.5:
@@ -128,7 +129,9 @@ class CobitDeepLearning:
         image = image / 255 # normalizing, the processed image becomes black for some reason.  do we need this?
         return image
 
-    
+    '''
+    Creating Convolution Neural Network 
+    '''
     def nvidia_model(self):
         model = Sequential(name='Nvidia_Model')
         
@@ -160,6 +163,9 @@ class CobitDeepLearning:
         
         return model
 
+    '''
+    Generating image for deep leanring with data augmentation
+    '''
     def image_data_generator(self, image_paths, steering_angles, batch_size, is_training):
         while True:
             batch_images = []
@@ -179,22 +185,35 @@ class CobitDeepLearning:
                 batch_steering_angles.append(steering_angle)
                 
             yield( np.asarray(batch_images), np.asarray(batch_steering_angles))
-
+'''
+3. deep_learning()
+  - Actual deep learning traiing method 
+'''
     def deep_training(self):
+	'''
+	3-1. Creating CNN network based on nVIDIA model 
+	'''
         model = self.nvidia_model()
         print(model.summary())
 
         ncol = 2
         nrow = 2
 
-
-
+	'''
+	3-2. Spliting labeling dataset into train data and test data  
+	'''
         X_train_batch, y_train_batch = next(self.image_data_generator(self.X_train, self.y_train, nrow, True))
         X_valid_batch, y_valid_batch = next(self.image_data_generator(self.X_valid, self.y_valid, nrow, False))
 
+	'''
+	3-3. Saving the model weights (inference file) after each epoch. Model is saved as name of 'lane_navigation_check.h5' at './output' folder.
+	'''
         # saves the model weights after each epoch if the validation loss decreased
         checkpoint_callback = keras.callbacks.ModelCheckpoint(filepath=os.path.join(self.model_output_dir,'lane_navigation_check.h5'), verbose=1, save_best_only=True)
 
+	'''
+	3-4. Performing actual deep learning training 
+	'''
         history = model.fit_generator(self.image_data_generator( self.X_train, self.y_train, batch_size=100, is_training=True),
                                     steps_per_epoch=300,
                                     epochs=10,
@@ -203,9 +222,16 @@ class CobitDeepLearning:
                                     verbose=1,
                                     shuffle=1,
                                     callbacks=[checkpoint_callback])
+	
+	'''
+	3-5. Saving final model weight(inference file) after training is finished.  
+	'''
         # always save model output as soon as model finishes training
         model.save(os.path.join(self.model_output_dir,'lane_navigation_final.h5'))
 
+	'''
+	3-6. Reporting training result. 
+	''' 
         date_str = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
         history_path = os.path.join(self.model_output_dir,'history.pickle')
         with open(history_path, 'wb') as f:
@@ -214,10 +240,14 @@ class CobitDeepLearning:
 import datetime
 
 
-
+'''
+2. Executing main code 
+ - Creating object ( from JdDeepLearning class 
+ - Running deep_learning() method 
+'''
 if __name__ == '__main__':
-    colab = CobitDeepLearning()
-    colab.deep_training()
+    jdlab = JdDeepLearning()
+    jdlab.deep_training()
     print("Deep learinig training finished!")
 
 
