@@ -32,6 +32,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPool2D, Dropout, Flatten, Dense
 from keras.optimizers import Adam
 from keras.models import load_model
+from tensorflow.keras.callbacks import EarlyStopping
 
 # sklearn
 from sklearn.utils import shuffle
@@ -210,18 +211,18 @@ class JdDeepLearning:
 	'''
         # saves the model weights after each epoch if the validation loss decreased
         checkpoint_callback = keras.callbacks.ModelCheckpoint(filepath=os.path.join(self.model_output_dir,'lane_navigation_check.h5'), verbose=1, save_best_only=True)
-
+        es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
 	'''
 	3-4. Performing actual deep learning training 
 	'''
-        history = model.fit_generator(self.image_data_generator( self.X_train, self.y_train, batch_size=100, is_training=True),
+        history = model.fit_generator(self.image_data_generator( self.X_train, self.y_train, batch_size=100, is_training=False),
                                     steps_per_epoch=300,
                                     epochs=10,
                                     validation_data = self.image_data_generator( self.X_valid, self.y_valid, batch_size=100, is_training=False),
                                     validation_steps=200,
                                     verbose=1,
                                     shuffle=1,
-                                    callbacks=[checkpoint_callback])
+                                    callbacks=[checkpoint_callback, es])
 	
 	'''
 	3-5. Saving final model weight(inference file) after training is finished.  
