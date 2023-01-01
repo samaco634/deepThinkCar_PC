@@ -217,7 +217,7 @@ class JdDeepLearning:
 	'''
         history = model.fit(self.image_data_generator( self.X_train, self.y_train, batch_size=100, is_training=False),
                                     steps_per_epoch=300,
-                                    epochs=10,
+                                    epochs=300,
                                     validation_data = self.image_data_generator( self.X_valid, self.y_valid, batch_size=100, is_training=False),
                                     validation_steps=200,
                                     verbose=1,
